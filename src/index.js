@@ -17,24 +17,45 @@ import './styles.css';
 
 // Project constructor --------------
 function createProject(title) {
-  let notes = [];
+  let cards = [];
 
-  const getCards = () => notes;
+  const getCards = () => cards;
 
-  const addCard = function (note) {
-    notes.push(note);
+  const addCard = function (card) {
+    cards.push(card);
   };
 
   const delCard = function (title) {
-    notes = notes.filter((note) => note.note !== title);
+    cards = cards.filter((card) => card.title !== title);
   };
 
-  return { title, getCards, addCard, delCard };
+  const getCard = function (title) {
+    return cards.find((card) => card.title === title);
+  };
+
+  return { title, getCards, addCard, delCard, getCard };
 }
 
 // Card constructor -------------
 function createCard(title, description, dueDate, priority) {
-  return { title, description, dueDate, priority };
+  let completed = 'Incomplete';
+  const getCompleted = () => completed;
+  const switchCompleted = () => {
+    if (completed === 'Incomplete') {
+      completed = 'Completed';
+    } else {
+      completed = 'Incomplete';
+    }
+  };
+
+  return {
+    title,
+    description,
+    dueDate,
+    priority,
+    getCompleted,
+    switchCompleted,
+  };
 }
 
 // Controller -------------
@@ -65,7 +86,7 @@ const Controller = (function Controller() {
 })();
 
 // DOM Control -------------
-// Accessory Module
+// Main DOM Handler Module
 const DOMHandler = (function handleMainDOMFunctions() {
   function loadPage() {
     const projectContainer = document.querySelector('.project-container');
@@ -93,7 +114,7 @@ const DOMHandler = (function handleMainDOMFunctions() {
                 <svg id="trash-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete</title><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
             </div>
             <div class="complete-block">
-                <button class="complete-toggle incomplete">In Progress</button>
+                <button class="complete-toggle ${card.getCompleted()}">${card.getCompleted()}</button>
             </div>
         </div>`;
     }
@@ -102,6 +123,7 @@ const DOMHandler = (function handleMainDOMFunctions() {
   return { loadPage };
 })();
 
+// Card-related DOM Handler Module
 const CardHandler = (function handleCardDOM() {
   function showModal() {
     const newCardDialog = document.querySelector('#new-todo-dialog');
@@ -125,9 +147,29 @@ const CardHandler = (function handleCardDOM() {
     const newToDoDialog = document.querySelector('#new-todo-dialog');
     newToDoDialog.close();
   }
-  return { showModal, handleInput };
+
+  function handleEvent(target) {
+    if (target.classList.contains('card-container')) {
+      return;
+    }
+    const cardTitle = target
+      .closest('.todo-card')
+      .querySelector('.info-block h2').textContent;
+    const currProject = Controller.getCurrProject();
+    if (target.id === 'trash-svg' || target.parentNode.id === 'trash-svg') {
+      currProject.delCard(cardTitle);
+      DOMHandler.loadPage();
+    }
+    if (target.classList.contains('complete-toggle')) {
+      const card = currProject.getCard(cardTitle);
+      card.switchCompleted();
+      DOMHandler.loadPage();
+    }
+  }
+  return { showModal, handleInput, handleEvent };
 })();
 
+// Project-related DOM Handler Module
 const ProjectHandler = (function handleProjectDOM() {
   function revealInput() {
     const inputField = document.querySelector('#add-project-field');
@@ -175,6 +217,12 @@ const addCardBtn = document.querySelector('#add-card-btn');
 addCardBtn.addEventListener('click', CardHandler.showModal);
 const cardConfirmBtn = document.querySelector('#confirm-button');
 cardConfirmBtn.addEventListener('click', (e) => CardHandler.handleInput(e));
+
+// Todo Card Handler
+const cardContainer = document.querySelector('.card-container');
+cardContainer.addEventListener('click', (e) =>
+  CardHandler.handleEvent(e.target)
+);
 
 // Switch projects
 const projectContainer = document.querySelector('.project-container');

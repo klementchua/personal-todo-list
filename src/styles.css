@@ -295,11 +295,11 @@ body {
   transition: transform 0.15s;
 }
 
-.complete-toggle.completed {
+.complete-toggle.Completed {
   background-color: #22c55e;
 }
 
-.complete-toggle.incomplete {
+.complete-toggle.Incomplete {
   background-color: #ef4444;
 }
 
