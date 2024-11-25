@@ -107,16 +107,23 @@ const NoteHandler = (function handleNoteDOM() {
 })();
 
 const ProjectHandler = (function handleProjectDOM() {
+  function revealInput() {
+    const inputField = document.querySelector('#add-project-field');
+    inputField.style.display = 'block';
+    inputField.focus();
+  }
+
   function handleInput(input, event) {
     switch (event.key) {
       case 'Enter':
         Controller.addProject(createProject(event.target.value));
         DOMHandler.loadPage();
         input.value = '';
+        input.style.display = 'none';
         break;
       case 'Escape':
         input.value = '';
-        input.blur();
+        input.style.display = 'none';
         break;
     }
   }
@@ -127,13 +134,16 @@ const ProjectHandler = (function handleProjectDOM() {
     DOMHandler.loadPage();
   }
 
-  return { handleInput, handleSwitch };
+  return { revealInput, handleInput, handleSwitch };
 })();
 
 // Event Listeners and Initialisation -------------
 DOMHandler.loadPage();
 
-const addProjectInput = document.querySelector('#add-project input');
+// Add Project
+const addProjectBtn = document.querySelector('#add-project-btn');
+addProjectBtn.addEventListener('click', ProjectHandler.revealInput);
+const addProjectInput = document.querySelector('#add-project-field');
 addProjectInput.addEventListener('keydown', (e) =>
   ProjectHandler.handleInput(addProjectInput, e)
 );

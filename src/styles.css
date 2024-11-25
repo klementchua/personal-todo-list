@@ -121,7 +121,51 @@ body {
   background-color: rgb(105, 128, 193);
 }
 
-/* Main */
+#add-project {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#add-project-field {
+  width: 216px;
+  background-color: rgb(74, 100, 173);
+  font-weight: bold;
+  font-size: 25px;
+  border: none;
+  border-bottom: 2px solid white;
+  margin: 0px 40px 20px 40px;
+  outline: none;
+  color: white;
+  display: none;
+}
+
+#add-project-field::placeholder {
+  color: rgba(223, 231, 245, 0.451);
+}
+
+#add-project-btn {
+  width: 150px;
+  font-size: 30px;
+  padding-bottom: 2px;
+  text-align: center;
+  border: 2px solid white;
+  border-radius: 50px;
+  transition:
+    scale 0.2s,
+    background-color 0.2s;
+}
+
+#add-project-btn:hover {
+  scale: 1.1;
+  background-color: rgb(105, 128, 193);
+}
+
+#add-project-btn:active {
+  scale: 0.93;
+}
+
+/* ---- Main ---- */
 .main {
   padding: 50px;
   background-color: azure;
