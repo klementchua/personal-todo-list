@@ -29,11 +29,38 @@
     </div>
 
     <div class="main">
-      <div class="note-container"></div>
+      <h1>Your Notes</h1>
+      <div class="card-container"></div>
 
-      <div id="add-note">
-        <input type="text" placeholder="Note" />
-      </div>
+      <div id="add-card-btn">+</div>
     </div>
+
+    <!-- Add card dialog popup -->
+    <dialog id="new-todo-dialog">
+      <h2>Add a to-do to your list</h2>
+      <form>
+        <div class="input-info">
+          <label for="note-title"></label>
+          <input type="text" id="note-title" placeholder="Title" />
+          <label for="note-description"></label>
+          <input type="text" id="note-description" placeholder="Description" />
+          <label for="note-due-date"></label>
+          <input type="date" id="note-due-date" />
+          <label for="note-importance"
+            >Importance:
+            <select name="note-importance" id="note-importance">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-buttons">
+          <button value="cancel" formmethod="dialog">Cancel</button>
+          <button id="confirm-button" value="default">Confirm</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
