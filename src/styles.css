@@ -1,24 +1,124 @@
-body {
+/* ---------- CSS Reset ---------- */
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/* 2. Remove default margin */
+* {
   margin: 0;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 250px 1fr;
+}
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+/* 5. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/* 6. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/* 7. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+/*
+  9. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
 }
 
-/* Sidebar */
+/* -------- Main CSS ---------- */
+
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 100px 1fr;
+  grid-template-columns: 300px 1fr;
+  font-family: 'Roboto';
+}
+
+.header {
+  background-image: linear-gradient(
+    45deg,
+    rgb(242, 242, 211),
+    rgb(231, 231, 179)
+  );
+  grid-area: 1 / 1 / 2 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 4px rgb(70, 70, 70);
+  z-index: 2;
+}
+
+.header img {
+  width: 300px;
+}
+
+/* ---- Sidebar ---- */
 .sidebar {
-  background-color: rgb(37, 109, 193);
-  padding: 25px;
+  background-color: rgb(74, 100, 173);
+  color: white;
+}
+
+.sidebar-header {
+  margin: 20px;
+  position: relative;
+}
+
+.sidebar-header::after {
+  position: absolute;
+  content: '';
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background-color: rgb(177, 193, 237);
 }
 
 .project {
-  padding: 20px;
-  font-size: 20px;
+  padding: 10px 40px;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .current-project,
 .project:hover {
-  background-color: rgb(84, 138, 200);
+  background-color: rgb(105, 128, 193);
 }
 
 /* Main */
