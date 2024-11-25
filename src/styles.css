@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: rgb(37, 109, 193);
+  padding: 25px;
+}
+
+.project {
+  padding: 20px;
+  font-size: 20px;
+}
+
+.current-project,
+.project:hover {
+  background-color: rgb(84, 138, 200);
+}
+
+/* Main */
+.main {
+  padding: 50px;
+  background-color: azure;
+}
+
+.note-container {
+  display: grid;
+  grid-template: repeat(auto-fit, minmax(100px, 1fr)) / repeat(
+      auto-fit,
+      minmax(300px, 1fr)
+    );
+  grid-auto-rows: minmax(100px, max-content);
+  gap: 50px;
+}
+
+#add-note,
+#add-project {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.note {
+  background-color: white;
+  box-shadow: 2px 2px 4px rgb(84, 84, 84);
+  padding: 20px;
+}
