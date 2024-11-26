@@ -9,9 +9,9 @@
 // initialisePage => let projects, currProj => createProj('Default') => append and set currProj => loadPage (DONE)
 // addProj (eventListener) => createProj => append to projects (DONE)
 // deleteProj (listen) => del from projects, set currProj => loadPage
-// clickProj (listen) => set currProj => loadPage
+// clickProj (listen) => set currProj => loadPage (DONE)
 // addNote => addNote to currProj => loadPage (DONE)
-// deleteNote => delNote from currProj => loadPage
+// deleteNote => delNote from currProj => loadPage (DONE)
 
 import './styles.css';
 
@@ -37,8 +37,8 @@ function createProject(title) {
 }
 
 // Card constructor -------------
-function createCard(title, description, dueDate, priority) {
-  let completed = 'Incomplete';
+function createCard(title, description, dueDate, priority, completedOrNot) {
+  let completed = completedOrNot;
   const getCompleted = () => completed;
   const switchCompleted = () => {
     if (completed === 'Incomplete') {
@@ -60,8 +60,12 @@ function createCard(title, description, dueDate, priority) {
 
 // Controller -------------
 const Controller = (function Controller() {
-  let projects = [createProject('Default')];
-  let currProject = projects[0];
+  let projects = [];
+  let currProject;
+  if (localStorage.length === 0) {
+    projects.push(createProject('Default'));
+    currProject = projects[0];
+  }
 
   const getProjects = () => projects;
   const getCurrProject = () => currProject;
@@ -118,6 +122,9 @@ const DOMHandler = (function handleMainDOMFunctions() {
             </div>
         </div>`;
     }
+
+    // Store Data after every page load
+    StorageHandler.storeData();
   }
 
   return { loadPage };
@@ -137,7 +144,13 @@ const CardHandler = (function handleCardDOM() {
     const description = document.querySelector('#note-description').value;
     const dueDate = document.querySelector('#note-due-date').value;
     const importance = document.querySelector('#note-importance').value;
-    const card = createCard(title, description, dueDate, importance);
+    const card = createCard(
+      title,
+      description,
+      dueDate,
+      importance,
+      'Incomplete'
+    );
     // Add card to project, load to DOM and reset form
     const currProject = Controller.getCurrProject();
     currProject.addCard(card);
@@ -201,7 +214,53 @@ const ProjectHandler = (function handleProjectDOM() {
   return { revealInput, handleInput, handleSwitch };
 })();
 
-// Event Listeners and Initialisation -------------
+// Storage Handler --------
+const StorageHandler = (function handleStorageInputAndOutput() {
+  function storeData() {
+    let dataObj = {};
+    // Store projects as obj keys and cards as arrays of objects in obj values
+    Controller.getProjects().forEach((project) => {
+      dataObj[project.title] = [];
+      project.getCards().forEach((card) => {
+        const cardObj = {
+          title: card.title,
+          description: card.description,
+          dueDate: card.dueDate,
+          priority: card.priority,
+          completed: card.getCompleted(),
+        };
+        dataObj[project.title].push(cardObj);
+      });
+    });
+    localStorage.setItem('projects', JSON.stringify(dataObj));
+  }
+
+  function initialiseData() {
+    if (localStorage.length !== 0) {
+      const dataObj = JSON.parse(localStorage.getItem('projects'));
+      for (const [projectTitle, cardArr] of Object.entries(dataObj)) {
+        const project = createProject(projectTitle);
+        cardArr.forEach((card) => {
+          const newCard = createCard(
+            card.title,
+            card.description,
+            card.dueDate,
+            card.priority,
+            card.completed
+          );
+          project.addCard(newCard);
+        });
+        Controller.addProject(project);
+      }
+      Controller.setCurrProject('Default');
+    }
+  }
+
+  return { storeData, initialiseData };
+})();
+
+// Event Listeners and Page Initialisation -------------
+StorageHandler.initialiseData();
 DOMHandler.loadPage();
 
 // Add Project
